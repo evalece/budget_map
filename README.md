@@ -1,5 +1,9 @@
 ## Budget Map 
 
+UI Prototype:
+
+[ui_p](UIdraft/ui.jpg)
+
 - Budget map is an App that explores stores around users, it features filtering and queryigng on the user's preferred budget and provides estimate of spending for living in the area.
 
 - This is a prototype 
