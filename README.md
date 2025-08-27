@@ -1,7 +1,7 @@
 ## Budget Map 
 
 UI Prototype:
-![ui_p1](UIdraft/Budget Map Base UI.png)
+![ui_p1](UIdraft/budget_Map_Base_UI.png)
 ![ui_p2](UIdraft/ui.jpg)
 
 
