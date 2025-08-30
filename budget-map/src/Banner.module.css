@@ -1,0 +1,59 @@
+.banner {
+  width: 100%;
+  background: rgb(147, 60, 160);
+  color: #9e1818;
+  z-index: 50;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+
+/* Fixed = always at viewport top; Sticky = sticks after scrolling reaches it */
+.fixed  { position: fixed;  top: 0; left: 0; }
+.sticky { position: sticky; top: 0; }
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background: rgba(88, 94, 168, 0.1);
+  font-size: 18px;
+}
+
+.text { display: flex; flex-direction: column; }
+
+.title {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.subtitle {
+  margin: 2px 0 0 0;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.right { display: flex; align-items: center; gap: 8px; }
+
+/* Make space for fixed header so content isn't hidden underneath */
+body { /* optional: if you use fixed header globally */
+   padding-top: 60px; /* set in index.css if you use fixed banners app-wide */
+}
