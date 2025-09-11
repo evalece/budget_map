@@ -14,7 +14,7 @@ Refresh Policy
 */
 
 
-
+const useCache= false;
 export interface Place{
 
   displayName?: string 
@@ -56,7 +56,7 @@ export async function NearByGooglePlace({storeType, maxCount}:{storeType: string
 
   const cachedAPI = localStorage.getItem(storeType);
   const cachedLocation = localStorage.getItem("userLocation");
-  if(cachedAPI && cachedLocation){
+  if(cachedAPI && cachedLocation && useCache){
     if (JSON.parse(cachedLocation).lat-location.lat<2 && JSON.parse(cachedLocation).lng-location.lng<2){ //*** */ Allowable Cache Re-use policy
 
       console.log("Returning Cache")
