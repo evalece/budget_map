@@ -1,7 +1,11 @@
 
 import  { Location, GetUserLocation  } from "./GetUserLocation";
 
-
+/*
+IncludePrimaryType:
+https://developers.google.com/maps/documentation/places/web-service/place-types?_gl=1*xhiri6*_up*MQ..*_ga*MTk1ODg4NDk5NS4xNzU3NzA3NzA2*_ga_NRWSTWS78N*czE3NTc3MDc3MDYkbzEkZzEkdDE3NTc3MDgyMjckajM1JGwwJGgw#table-a
+https://developers.google.com/maps/documentation/places/web-service/nearby-search?_gl=1*1jbj233*_up*MQ..*_ga*MTk1ODg4NDk5NS4xNzU3NzA3NzA2*_ga_NRWSTWS78N*czE3NTc3MDc3MDYkbzEkZzEkdDE3NTc3MDgyMjUkajM3JGwwJGgw
+*/
 
 /* 
 localStore: 
@@ -13,11 +17,12 @@ Refresh Policy
 2. If Userlocation change with +/- N lat and lng
 */
 
-
+// Modify so that each store must have mandatory fields
 const useCache= false;
 export interface Place{
 
-  displayName?: string 
+  displayName?: string,
+  id?:string,
   location?: {
     latitude?: number;
     longitude?: number;
@@ -26,10 +31,11 @@ export interface Place{
 
 }
 
-
+///Work on this parser later 
 function normalizePlaces(data: any): Place[] {
   return (data?.places ?? []).map((p: any) => ({
     displayName: p?.displayName?.text ?? p?.displayName,
+    id:p.id,
     location: {
       latitude: Number(p?.location?.latitude ?? p?.location?.latLng?.latitude),
       longitude: Number(p?.location?.longitude ?? p?.location?.latLng?.longitude),
@@ -44,94 +50,79 @@ function normalizePlaces(data: any): Place[] {
 
 
 
-export async function NearByGooglePlace({storeType, maxCount}:{storeType: string, maxCount: number}) : Promise<Place>{
+export async function NearByGooglePlace({storeType, maxResult}:{storeType: string, maxResult: number}) : Promise<Place[]>{
 
 
   // try retrieve from localStore first unless user location updates 
   const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_API_KEY as string;
-  console.log(" API_KEY=", API_KEY);
+  if (API_KEY){
+    console.log(" API_KEY is not null");
+  }
+ 
   const location: Location = await GetUserLocation();
 
   console.log("Got user location:", location);
 
-  const cachedAPI = localStorage.getItem(storeType);
-  const cachedLocation = localStorage.getItem("userLocation");
-  if(cachedAPI && cachedLocation && useCache){
-    if (JSON.parse(cachedLocation).lat-location.lat<2 && JSON.parse(cachedLocation).lng-location.lng<2){ //*** */ Allowable Cache Re-use policy
+  //const cachedAPI = localStorage.getItem(storeType);
+  //const cachedLocation = localStorage.getItem("userLocation");
+  // ****** Fetch User Cache if User location within threshold
+  
+  //****** End of Fetch Catch
 
-      console.log("Returning Cache")
-     // console.log(JSON.parse(cachedAPI))
-
-      if(!cachedAPI){
-        return normalizePlaces(cachedAPI)[0]
-      }
-        
-    }
-  }
-
-  console.log("Fetching API")
+  console.log("Fetching API1")
 
 
   if (!API_KEY) {
     throw new Error("Missing Google API key! Did you set REACT_APP_GOOGLE_API_KEY in .env.local?");
   }
-  const res = await fetch("https://places.googleapis.com/v1/places:searchNearby", {
-  
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Goog-Api-Key": API_KEY,
-      "X-Goog-FieldMask": [
-      "places.displayName",
-      "places.location",
-      "places.priceLevel"
 
-      
-      ].join(",")
 
-    },
-    body: JSON.stringify({
-      includedTypes: storeType,
-      maxResultCount: maxCount,
-      rankPreference: "DISTANCE",   
-      locationRestriction: {
-        circle: {
-          center: {
-            latitude:location.lat,
-            longitude:location.lng
-          },
-          radius: 500.0
-        },
+
+// sanity checks (BEFORE fetch)
+if (typeof location?.lat !== "number" || Number.isNaN(location.lat)) {
+  throw new Error(`Invalid latitude: ${location?.lat}`);
+}
+if (typeof location?.lng !== "number" || Number.isNaN(location.lng)) {
+  throw new Error(`Invalid longitude: ${location?.lng}`);
+}
+
+
+//const maxResultC = 3; // clamp 1..20
+const types = ["restaurant"]; // or [storeType] if it's your variable
+console.log("heading res")
+
+const res = await fetch("https://places.googleapis.com/v1/places:searchNearby", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "X-Goog-Api-Key": API_KEY,
+    "X-Goog-FieldMask": "places.id,places.displayName,places.location,places.priceLevel",
+  },
+  body: JSON.stringify({
+    includedPrimaryTypes: types,     
+    maxResultCount: maxResult,
+    rankPreference: "DISTANCE",
+    locationRestriction: {
+      circle: {
+        center: { latitude: location.lat, longitude: location.lng },
+        radius: 500,
       },
-    }),
-  });
+    },
+  }),
+});
+console.log("complete res")
 
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const data = await res.json();          
-  const places = normalizePlaces(data)[0];  
-
-  if(places){  //***Store Cache
-      localStorage.setItem(
-      storeType,
-      JSON.stringify({
-        place: places.displayName,
-        lat: location.lat,
-        lng: location.lng,
-        priceLevel: places.priceLevel
-        //timestamp: Date.now(),
-      })
-    );
-    localStorage.setItem(
-      "userLocation", JSON.stringify({
-        lng:location.lng,
-        lat:location.lat
-      })
-    )
-  }
+// IMPORTANT: read the error body so we know exactly what's wrong
+if (!res.ok) {
+  const errText = await res.clone().text();
+  throw new Error(`HTTP ${res.status}`);
+}
 
 
+const data = await res.json();     
 
-  return places;   //assume one place 
+
+return normalizePlaces(data).slice(0, maxResult)  //assume one place 
 
 
 

@@ -1,17 +1,56 @@
 // app/components/WidgetBox.tsx
+// PlacesCard: JXS for each place
+// WidgetBox: Container listing 
+"use client";
 import { ReactNode } from "react";
+// Widget.tsx
 
-export default function WidgetBox({
-  title, subtitle, children, footer,
-}: { title: string; subtitle?: string; footer?: ReactNode; children: ReactNode }) {
+
+import React, { useEffect, useState } from "react";
+import PlacesCard from "./components/PlacesCard";
+
+import { Place,NearByGooglePlace } from "./lib/NearByGooglePlace";
+
+type Props = { storeType: string; maxResult: number };
+
+export default function Widget({ storeType, maxResult }: Props) {
+  const [places, setPlaces] = useState<Place[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const results = await NearByGooglePlace({ storeType, maxResult });
+        if (!cancelled) setPlaces(results);
+      } catch (e: any) {
+        if (!cancelled) setError(e?.message ?? "Failed to load places");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [storeType, maxResult]);
+
+  if (loading) return <div>Loading nearby places…</div>;
+  if (error) return <div role="alert">Error: {error}</div>;
+  if (places.length === 0) return <div>No places found nearby.</div>;
+
   return (
-    <section className="rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
-      <header className="p-4 border-b border-gray-100 dark:border-gray-800">
-        <h2 className="text-base font-semibold">{title}</h2>
-        {subtitle && <p className="text-sm text-gray-500">{subtitle}</p>}
-      </header>
-      <div className="p-4">{children}</div>
-      {footer && <div className="px-4 py-3 border-t border-gray-100 dark:border-gray-800 text-sm text-gray-500">{footer}</div>}
-    </section>
+    <ol className="places-list" aria-live="polite">
+      {places.map((p) => (
+        <li key={p.id}>
+          console.log({p.id});
+          <PlacesCard place={p} />
+        </li>
+      ))}
+    </ol>
   );
 }

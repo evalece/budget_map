@@ -25,9 +25,18 @@ global.css:
 @import "tailwindcss";
 ```
 
+Deployment
 bash```
+npm run build && npm start
+```
+bash```
+Development
 npm run dev
 ```
+
+Next,js branch overwrite:
+git push --force-with-lease origin nextJS
+
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
