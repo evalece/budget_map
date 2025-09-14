@@ -47,7 +47,6 @@ export default function Widget({ storeType, maxResult }: Props) {
     <ol className="places-list" aria-live="polite">
       {places.map((p) => (
         <li key={p.id}>
-          console.log({p.id});
           <PlacesCard place={p} />
         </li>
       ))}

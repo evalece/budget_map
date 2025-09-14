@@ -1,4 +1,5 @@
 
+import { stringify } from "querystring";
 import  { Location, GetUserLocation  } from "./GetUserLocation";
 
 /*
@@ -6,6 +7,20 @@ IncludePrimaryType:
 https://developers.google.com/maps/documentation/places/web-service/place-types?_gl=1*xhiri6*_up*MQ..*_ga*MTk1ODg4NDk5NS4xNzU3NzA3NzA2*_ga_NRWSTWS78N*czE3NTc3MDc3MDYkbzEkZzEkdDE3NTc3MDgyMjckajM1JGwwJGgw#table-a
 https://developers.google.com/maps/documentation/places/web-service/nearby-search?_gl=1*1jbj233*_up*MQ..*_ga*MTk1ODg4NDk5NS4xNzU3NzA3NzA2*_ga_NRWSTWS78N*czE3NTc3MDc3MDYkbzEkZzEkdDE3NTc3MDgyMjUkajM3JGwwJGgw
 */
+
+/*  API PriceLevel:
+https://developers.google.com/maps/documentation/places/web-service/reference/rest/v1/places#PriceLevel
+*/
+
+const priceLevelMap: Record<string, number> = { //API v1 price level defition
+  PRICE_LEVEL_UNSPECIFIED: 0,
+  PRICE_LEVEL_FREE: 1,
+  PRICE_LEVEL_INEXPENSIVE: 2,
+  PRICE_LEVEL_MODERATE: 3,
+  PRICE_LEVEL_EXPENSIVE: 4,
+  PRICE_LEVEL_VERY_EXPENSIVE: 5,
+};
+
 
 /* 
 localStore: 
@@ -23,27 +38,32 @@ export interface Place{
 
   displayName?: string,
   id?:string,
+  formattedAddress?: string,
   location?: {
     latitude?: number;
     longitude?: number;
   };
-  priceLevel?: number;
+  priceLevel: string;
 
 }
 
-///Work on this parser later 
+///Work on this parser later; note some API mapping here
 function normalizePlaces(data: any): Place[] {
   return (data?.places ?? []).map((p: any) => ({
     displayName: p?.displayName?.text ?? p?.displayName,
     id:p.id,
+    formattedAddress:
+    p?.formattedAddress !== undefined && p?.formattedAddress!==null?
+    p.formattedAddress:
+    undefined,
     location: {
       latitude: Number(p?.location?.latitude ?? p?.location?.latLng?.latitude),
       longitude: Number(p?.location?.longitude ?? p?.location?.latLng?.longitude),
     },
     priceLevel:
       p?.priceLevel !== undefined && p?.priceLevel !== null
-        ? Number(p.priceLevel)
-        : undefined,
+        ? p.priceLevel:
+         undefined,
   }));
 }
 
@@ -96,7 +116,7 @@ const res = await fetch("https://places.googleapis.com/v1/places:searchNearby", 
   headers: {
     "Content-Type": "application/json",
     "X-Goog-Api-Key": API_KEY,
-    "X-Goog-FieldMask": "places.id,places.displayName,places.location,places.priceLevel",
+    "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.location,places.priceLevel",
   },
   body: JSON.stringify({
     includedPrimaryTypes: types,     
@@ -120,6 +140,7 @@ if (!res.ok) {
 
 
 const data = await res.json();     
+console.log(data)
 
 
 return normalizePlaces(data).slice(0, maxResult)  //assume one place 
