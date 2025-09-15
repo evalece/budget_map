@@ -17,14 +17,17 @@ PRICE_LEVEL_VERY_EXPENSIVE	: "#6e21acff"
 
 export default function AffordabilityPlot({place}:{place:Place[]}) {
 
-    /**
-     Do to: parse Place into an array, 
+/*
 
-     const lng=
-     const lat=
-     const pricelevel=
-     const label= 
-     */
+to do: 
+check back after normalizePlaces
+*/
+
+    const lngs=  place.filter(p=>p.location?.longitude != undefined && p.location.longitude != undefined).map(p=>p.location.longitude as number);
+    const lats= place.filter(p=>p.location.latitude != undefined && p.location.latitude != undefined).map(p=>p.location.latitude as number);
+    const pricelevel= place.map((p)=>p.priceLevel);
+    //const labels= place.map((p) => `${p.displayName}<br>Price: ${p.priceLevel} <br>Address: ${p.formattedAddress} <br>Debug: ${p.location.latitude},${p.location.longitude}`)
+    const priceColorMap= place.map((p=>priceColor[p.priceLevel]));
 
   return (
     <div className="w-full h-[500px]">
@@ -35,9 +38,9 @@ export default function AffordabilityPlot({place}:{place:Place[]}) {
             mode: "markers",
             x: lngs,
             y: lats,
-            text: texts,
-            hoverinfo: "text",
-            marker: { color: colors, size: 12, opacity: 0.8 },
+            //text: labels,
+            hoverinfo: "Location and Budget Distribution Information",
+            marker: { color: priceColorMap, size: 12, opacity: 0.8 },
           },
         ]}
         layout={{

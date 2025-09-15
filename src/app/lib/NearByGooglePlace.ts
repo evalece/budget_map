@@ -36,34 +36,32 @@ Refresh Policy
 const useCache= false;
 export interface Place{
 
-  displayName?: string,
-  id?:string,
-  formattedAddress?: string,
-  location?: {
-    latitude?: number;
-    longitude?: number;
+  displayName: string,
+  id:string,
+  formattedAddress: string,
+  location: {
+    latitude: number;
+    longitude: number;
   };
   priceLevel: string;
 
 }
 
-///Work on this parser later; note some API mapping here
+//to do:
+// fix to return exactly one type
 function normalizePlaces(data: any): Place[] {
   return (data?.places ?? []).map((p: any) => ({
-    displayName: p?.displayName?.text ?? p?.displayName,
-    id:p.id,
+    displayName: p?.displayName?.text ?? p?.displayName , //string undefined,  // if undefined, no need to redefine undefined.
+    id:p?.id, //string undefined, 
     formattedAddress:
-    p?.formattedAddress !== undefined && p?.formattedAddress!==null?
-    p.formattedAddress:
-    undefined,
+    p?.formattedAddress?.text?? p?.formattedAddress, //string undefined, 
+
     location: {
-      latitude: Number(p?.location?.latitude ?? p?.location?.latLng?.latitude),
-      longitude: Number(p?.location?.longitude ?? p?.location?.latLng?.longitude),
+      latitude: Number(p?.location?.latitude ?? p?.location?.latLng?.latitude?? undefined), //number
+      longitude: Number(p?.location?.longitude ?? p?.location?.latLng?.longitude?? undefined ), //number
     },
     priceLevel:
-      p?.priceLevel !== undefined && p?.priceLevel !== null
-        ? p.priceLevel:
-         undefined,
+      p?.priceLevel?.text?? p?.priceLevel??undefined // string
   }));
 }
 
