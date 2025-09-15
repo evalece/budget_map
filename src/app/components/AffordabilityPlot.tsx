@@ -17,17 +17,14 @@ PRICE_LEVEL_VERY_EXPENSIVE	: "#6e21acff"
 
 export default function AffordabilityPlot({place}:{place:Place[]}) {
 
-/*
+    // Parse, keep only items with valid lat,lng and priceLevel
+    const cleanedPlaces:Place[]= place.filter(p=>p.location?.longitude != undefined && p.location.longitude != undefined && p.priceLevel != undefined);
 
-to do: 
-check back after normalizePlaces
-*/
-
-    const lngs=  place.filter(p=>p.location?.longitude != undefined && p.location.longitude != undefined).map(p=>p.location.longitude as number);
-    const lats= place.filter(p=>p.location.latitude != undefined && p.location.latitude != undefined).map(p=>p.location.latitude as number);
-    const pricelevel= place.map((p)=>p.priceLevel);
-    //const labels= place.map((p) => `${p.displayName}<br>Price: ${p.priceLevel} <br>Address: ${p.formattedAddress} <br>Debug: ${p.location.latitude},${p.location.longitude}`)
-    const priceColorMap= place.map((p=>priceColor[p.priceLevel]));
+    const lngs=  cleanedPlaces.map(p=>p.location.longitude as number);
+    const lats= cleanedPlaces.map(p=>p.location.latitude as number);
+    const pricelevel= cleanedPlaces.map((p=>priceColor[p.priceLevel]));
+    const labels= cleanedPlaces.map((p) => `${p.displayName}<br>Price: ${p.priceLevel} <br>Address: ${p.formattedAddress} <br>Debug: ${p.location.latitude},${p.location.longitude}`)
+    const priceColorMap= cleanedPlaces.map((p=>priceColor[p.priceLevel]));
 
   return (
     <div className="w-full h-[500px]">
@@ -38,15 +35,15 @@ check back after normalizePlaces
             mode: "markers",
             x: lngs,
             y: lats,
-            //text: labels,
-            hoverinfo: "Location and Budget Distribution Information",
+            text: labels,
+            hoverinfo:"text",
             marker: { color: priceColorMap, size: 12, opacity: 0.8 },
           },
         ]}
         layout={{
-          title: "Affordability scatter (lon/lat)",
-          xaxis: { title: "Longitude" },
-          yaxis: { title: "Latitude" },
+          title: { text: "Affordability scatter (lon/lat)"},
+          xaxis: { title:  { text:"Longitude" } },
+          yaxis: { title: { text:"Latitude" }},
           margin: { t: 40, r: 10, l: 40, b: 40 },
         }}
         config={{ responsive: true }}
