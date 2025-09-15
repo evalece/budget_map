@@ -3,7 +3,7 @@
 
 // !isNaN  => always false 
 
-import {Place} from "../lib/NearByGooglePlace";
+import {Place} from "../../lib/NearByGooglePlace";
 
 export default function PlacesCard({ place }: { place: Place }){
 

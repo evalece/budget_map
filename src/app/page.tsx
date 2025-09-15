@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from "react";
 import SearchBar from "./SearchBar";
 import Banner from "./Banner";
-import PlacesCard from "./components/PlacesCard";
-import WidgetBox from "./WidgetBox";
+import PlacesCard from "./components/cards/PlacesCard";
+import WidgetBox from "./components/widget/WidgetBox";
 import { NearByGooglePlace, Place } from "./lib/NearByGooglePlace";
 import "./page.css";
 

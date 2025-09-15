@@ -7,6 +7,8 @@ export interface Location {
 }
 
 
+/* To do: move API calls to app/api */
+
 export async function GetUserLocation(): Promise<Location> {
 
 

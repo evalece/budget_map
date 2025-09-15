@@ -7,9 +7,9 @@ import { ReactNode } from "react";
 
 
 import React, { useEffect, useState } from "react";
-import PlacesCard from "./components/PlacesCard";
+import PlacesCard from "../cards/PlacesCard";
 
-import { Place,NearByGooglePlace } from "./lib/NearByGooglePlace";
+import { Place,NearByGooglePlace } from "../../lib/NearByGooglePlace";
 
 type Props = { storeType: string; maxResult: number };
 
@@ -53,3 +53,5 @@ export default function Widget({ storeType, maxResult }: Props) {
     </ol>
   );
 }
+
+
