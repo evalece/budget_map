@@ -6,6 +6,8 @@ import { ReactNode } from "react";
 // Widget.tsx
 
 
+/* to do : remove NearByGooglePlace API calls  */
+
 import React, { useEffect, useState } from "react";
 import PlacesCard from "../cards/PlacesCard";
 

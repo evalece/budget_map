@@ -15,6 +15,11 @@ PRICE_LEVEL_VERY_EXPENSIVE	: "#6e21acff"
 
 }
 
+// plot re-render iff place updates, useMemo() to keep track on dependent data
+// in this case, we allow JSX passing from page. 
+// Learned: avoid having functions returning JSX, which makes calls to another function that also returns JSX
+
+
 export default function AffordabilityPlot({place}:{place:Place[]}) {
 
     // Parse, keep only items with valid lat,lng and priceLevel
