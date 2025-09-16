@@ -2,16 +2,16 @@
 // PlacesCard: JXS for each place
 // WidgetBox: Container listing 
 "use client";
-import { ReactNode } from "react";
-// Widget.tsx
+
+import {NearByGooglePlace} from "@/app/api/NearByGooglePlace";
 
 
 /* to do : remove NearByGooglePlace API calls  */
 
 import React, { useEffect, useState } from "react";
-import PlacesCard from "../cards/PlacesCard";
+import PlacesCard from "@/components/cards/PlacesCard";
 
-import { Place,NearByGooglePlace } from "../../lib/NearByGooglePlace";
+import {Place } from "@/types/Place";
 
 type Props = { storeType: string; maxResult: number };
 

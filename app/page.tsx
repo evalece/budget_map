@@ -1,11 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import SearchBar from "./SearchBar";
-import Banner from "./Banner";
-import PlacesCard from "./components/cards/PlacesCard";
-import WidgetBox from "./components/widget/WidgetBox";
-import { NearByGooglePlace, Place } from "./lib/NearByGooglePlace";
+import React from "react";
+
+import WidgetBox from "@/components/widget/WidgetBox";
 import "./page.css";
 
 export default function Page() {

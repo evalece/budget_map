@@ -1,7 +1,7 @@
 "use client";
 
 import Plot from "react-plotly.js";
-import {Place} from "../../lib/NearByGooglePlace";
+import {Place } from "@/types/Place";
 
 
 // Color-PriceLevel Mapping 
