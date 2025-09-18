@@ -1,15 +1,21 @@
 "use client";
 
-import Plot from "react-plotly.js";
+import Plot from "react-plotly.js"
+import dynamic from "next/dynamic";
+//import { useMemo } from "react";
 import {Place } from "@/types/Place";
+// Allow user end plotting:
+import  { Location, GetUserLocation  } from "@/lib/GetUserLocation";
+import { useEffect, useState } from "react";
 
+const Plot1 = dynamic(() => import("react-plotly.js"), { ssr: false });
 
 // Color-PriceLevel Mapping 
 const priceColor: Record <string,string>={
 PRICE_LEVEL_UNSPECIFIED	: "#5a5a5aff",
 PRICE_LEVEL_FREE	: "#939393ff",
-PRICE_LEVEL_INEXPENSIVE	: "#4bb74cff",
-PRICE_LEVEL_MODERATE	: "#33a3a9ff",
+PRICE_LEVEL_INEXPENSIVE	: "#00c503ff",
+PRICE_LEVEL_MODERATE	: "#143ccfff",
 PRICE_LEVEL_EXPENSIVE	: "#a84c98ff",
 PRICE_LEVEL_VERY_EXPENSIVE	: "#6e21acff"
 
@@ -20,7 +26,7 @@ PRICE_LEVEL_VERY_EXPENSIVE	: "#6e21acff"
 // Learned: avoid having functions returning JSX, which makes calls to another function that also returns JSX
 
 
-export default function AffordabilityPlot({place}:{place:Place[]}) {
+export  function AffordabilityPlot({place}:{place:Place[]}) {
 
     // Parse, keep only items with valid lat,lng and priceLevel
     const cleanedPlaces:Place[]= place.filter(p=>p.location?.longitude != undefined && p.location.longitude != undefined && p.priceLevel != undefined);
@@ -30,25 +36,74 @@ export default function AffordabilityPlot({place}:{place:Place[]}) {
     const pricelevel= cleanedPlaces.map((p=>priceColor[p.priceLevel]));
     const labels= cleanedPlaces.map((p) => `${p.displayName}<br>Price: ${p.priceLevel} <br>Address: ${p.formattedAddress} <br>Debug: ${p.location.latitude},${p.location.longitude}`)
     const priceColorMap= cleanedPlaces.map((p=>priceColor[p.priceLevel]));
+    const [userLocation, setUserLocation]=useState<Location|null>(null);
+
+
+ useEffect(()=>{
+
+(async()=>{
+     const userLocation: Location = await GetUserLocation();
+}
+
+)()
+
+ },[]
+
+)
+
+
+
+
+     const traces: any[] = [
+    {
+      type: "scattergl",
+      mode: "markers",
+      x: lngs,
+      y: lats,
+      text: labels,
+      hoverinfo: "text",
+      marker: { color: priceColorMap, size: 12, opacity: 0.8 },
+      name: "Places",
+    },
+  ];
+
+  
+
+ 
+
+
+    if (userLocation?.lat !== undefined && userLocation?.lng !== undefined) {
+    traces.push({
+      type: "scattergl",
+      mode: "markers+text",
+      x: [userLocation.lng],
+      y: [userLocation.lat],
+      text: ["You are here"],
+      textposition: "top center",
+      marker: { color: "red", size: 16, symbol: "star" },
+      name: "User location",
+      hoverinfo: "text",
+    });
+  }
 
   return (
     <div className="w-full h-[500px]">
-      <Plot
+      <Plot1
         data={[
           {
             type: "scattergl", // WebGL-powered scatter
             mode: "markers",
             x: lngs,
             y: lats,
-            text: labels,
+            text: ["User Location"],
             hoverinfo:"text",
-            marker: { color: priceColorMap, size: 12, opacity: 0.8 },
+            marker: { color: "#ffbf2bff", size: 12, opacity: 0.8 },
           },
         ]}
         layout={{
           title: { text: "Affordability scatter (lon/lat)"},
-          xaxis: { title:  { text:"Longitude" } },
-          yaxis: { title: { text:"Latitude" }},
+          xaxis: {  autorange: true, automargin: true,title:  { text:"Longitude" } },
+          yaxis: {  autorange: true, automargin: true, title: { text:"Latitude" }},
           margin: { t: 40, r: 10, l: 40, b: 40 },
         }}
         config={{ responsive: true }}

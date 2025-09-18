@@ -5,7 +5,7 @@ import {normalizePlaces} from "@/lib/NormalizePlaces"
 
 
 
-export async function NearByGooglePlace({storeType, maxResult}:{storeType: string, maxResult: number}) : Promise<Place[]>{
+export async function NearByGooglePlace(storeType: string, maxResult: number) : Promise<Place[]>{
 
 
   // try retrieve from localStore first unless user location updates 
