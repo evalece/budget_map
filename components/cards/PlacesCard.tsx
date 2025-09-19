@@ -6,6 +6,7 @@ import {Place } from "@/types/Place";
 
 export default function PlacesCard({ place }: { place: Place }){
 
+
       return (
     <div className="rounded-lg border p-4 shadow bg-transparent
 ">

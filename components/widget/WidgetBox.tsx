@@ -4,6 +4,7 @@
 "use client";
 
 import {NearByGooglePlace} from "@/app/api/NearByGooglePlace";
+import Head from 'next/head';
 
 
 /* to do : remove NearByGooglePlace API calls  */
@@ -51,13 +52,16 @@ export  function WidgetBox({ storeType, maxResult }: Props) {
   
 
   return (
-    <ol className="places-list" aria-live="polite">
+    <>
+    <h2 className="places-list-title" aria-live="polite"> {storeType}</h2>
+    <ol className="places-list" aria-live="polite" >
       {cleanedPlaces.map((p) => (
         <li key={p.id}>
           <PlacesCard place={p} />
         </li>
       ))}
     </ol>
+    </>
   );
 }
 

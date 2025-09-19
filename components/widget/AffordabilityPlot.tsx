@@ -37,12 +37,25 @@ export  function AffordabilityPlot({place}:{place:Place[]}) {
     const labels= cleanedPlaces.map((p) => `${p.displayName}<br>Price: ${p.priceLevel} <br>Address: ${p.formattedAddress} <br>Debug: ${p.location.latitude},${p.location.longitude}`)
     const priceColorMap= cleanedPlaces.map((p=>priceColor[p.priceLevel]));
     const [userLocation, setUserLocation]=useState<Location|null>(null);
+    const [loading, setLoading]=useState<Boolean>(false);
 
 
  useEffect(()=>{
 
 (async()=>{
-     const userLocation: Location = await GetUserLocation();
+    try{
+      setLoading(true);
+      const loc:Location= await GetUserLocation();
+      setUserLocation(loc);
+    } 
+    catch(e){
+       console.log(`"error at Affplot ${e}"`);
+    }
+    finally{
+      console.log("complete location");
+      setLoading(false);
+
+    }
 }
 
 )()
@@ -50,6 +63,9 @@ export  function AffordabilityPlot({place}:{place:Place[]}) {
  },[]
 
 )
+
+
+  if(loading) return <div>Loading Addordability and Location Plot</div>
 
 
 
@@ -67,17 +83,20 @@ export  function AffordabilityPlot({place}:{place:Place[]}) {
     },
   ];
 
-  
 
- 
 
 
     if (userLocation?.lat !== undefined && userLocation?.lng !== undefined) {
+
+      const userLng:number=userLocation.lng;
+      const userLat:number=userLocation.lat;
+
+    console.log(`"Plot got location from User ${userLocation.lng}, ${userLocation.lat}"`)
     traces.push({
       type: "scattergl",
-      mode: "markers+text",
-      x: [userLocation.lng],
-      y: [userLocation.lat],
+      mode: "markers",
+      x: [userLng],
+      y: [userLat],
       text: ["You are here"],
       textposition: "top center",
       marker: { color: "red", size: 16, symbol: "star" },
@@ -86,29 +105,26 @@ export  function AffordabilityPlot({place}:{place:Place[]}) {
     });
   }
 
+
+
   return (
+
+    
+
     <div className="w-full h-[500px]">
       <Plot1
-        data={[
-          {
-            type: "scattergl", // WebGL-powered scatter
-            mode: "markers",
-            x: lngs,
-            y: lats,
-            text: ["User Location"],
-            hoverinfo:"text",
-            marker: { color: "#ffbf2bff", size: 12, opacity: 0.8 },
-          },
-        ]}
+        data={traces}
         layout={{
-          title: { text: "Affordability scatter (lon/lat)"},
-          xaxis: {  autorange: true, automargin: true,title:  { text:"Longitude" } },
-          yaxis: {  autorange: true, automargin: true, title: { text:"Latitude" }},
+          title: { text: "Affordability scatter (lon/lat)" },
+          xaxis: { autorange: true, automargin: true, title: { text: "Longitude" } },
+          yaxis: { autorange: true, automargin: true, title: { text: "Latitude" } },
           margin: { t: 40, r: 10, l: 40, b: 40 },
         }}
         config={{ responsive: true }}
         style={{ width: "100%", height: "100%" }}
       />
     </div>
+
+
   );
 }
