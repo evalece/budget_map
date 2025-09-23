@@ -9,17 +9,17 @@ It features precise geological presentation and price range filtering on top of 
 
 ### Demo UIs 
 
-![base_ui](budget_map/demo_images/bm_ui.png)
+![base_ui](/demo_images/bm_ui.png)
 
 ### Demo widget and browsing UI/UX
 
-![base_ui](budget_map/demo_images/widget.png)
+![base_ui](/demo_images/widget.png)
 
 ### In-Progress Development
 
 - Work-in-progress:
     - Latitude and logitude with store price label plot query, based on user's location.    
-![geo_dots](budget_map/demo_images/wip/sep23/geo_dot.png)
+![geo_dots](/demo_images/wip/sep23/geo_dot.png)
 
 
 
