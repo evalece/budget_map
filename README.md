@@ -1,42 +1,29 @@
-### Dev notes 
-## Install:
-At current directory; sidenote: use tailwind v4
-```bash
-npm install
+<h3 align="left">Languages and Tools</h3>
+<p align="left"> <a href="https://cloud.google.com" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/google_cloud/google_cloud-icon.svg" alt="gcp" width="40" height="40"/> </a> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="40" height="40"/> </a> <a href="https://nextjs.org/" target="_blank" rel="noreferrer">  </a> <a href="https://reactjs.org/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" alt="react" width="40" height="40"/> </a> <a href="https://www.typescriptlang.org/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/typescript/typescript-original.svg" alt="typescript" width="40" height="40"/> </a> </p>
 
-npm install next@latest react@latest react-dom@latest
-npm install tailwindcss @tailwindcss/postcss postcss
+## Budget Map 
 
-```
+The Budget Map is a Web APP prototype that explores local shops by price ranges. 
+It features precise geological presentation and price range filtering on top of store type, saving user browsing and look-up time efficiently while providing valuable marketing information on geological-based purchasing trends. 
 
-```bash
-// postcss.config.mjs
-const config = {
-  plugins: {
-    "@tailwindcss/postcss": {},
-  },
-};
-export default config;
-```
 
-global.css:
+### Demo UIs 
 
-```bash
-@import "tailwindcss";
-```
+![base_ui](budget_map/demo_images/bm_ui.png)
 
-Deployment
-bash```
-npm run build && npm start
-```
-bash```
-Development
-npm run dev
-```
+### Demo widget and browsing UI/UX
 
-Next,js branch overwrite:
-git push --force-with-lease origin nextJS
+![base_ui](budget_map/demo_images/widget.png)
 
+### In-Progress Development
+
+- Work-in-progress:
+    - Latitude and logitude with store price label plot query, based on user's location.    
+![geo_dots](budget_map/demo_images/wip/sep23/geo_dot.png)
+
+
+
+### Project Tech Stack
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
@@ -58,19 +45,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Credit: 
+1. Languages and Tools generation: 
+https://github.com/rahuldkjain/github-profile-readme-generator?tab=readme-ov-file 
